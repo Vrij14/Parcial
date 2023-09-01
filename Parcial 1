@@ -1,0 +1,49 @@
+class Producto {
+  String nombre;
+  DateTime fechaVencimiento;
+  double precio;
+
+  Producto(this.nombre, this.fechaVencimiento, this.precio);
+
+  bool estaCercaDeVencer() {
+    final diasParaVencer = fechaVencimiento.difference(DateTime.now()).inDays;
+    return diasParaVencer <= 15;
+  }
+
+  double calcularPrecioConDescuento() {
+    if (estaCercaDeVencer()) {
+      return precio * 0.85;
+    } else {
+      return precio;
+    }
+  }
+}
+
+class Ventas {
+  List<Producto> productos = [];
+
+  void agregarProducto(Producto producto) {
+    productos.add(producto);
+  }
+
+  double calcularTotal() {
+    double total = 0;
+    for (var producto in productos) {
+      total += producto.calcularPrecioConDescuento();
+    }
+    return total;
+  }
+}
+
+void main() {
+  final manzanas = Producto('Manzanas', DateTime.now().add(Duration(days: 20)), 10);
+  final leche = Producto('Leche', DateTime.now().add(Duration(days: 10)), 3);
+  final pan = Producto('Pan', DateTime.now().add(Duration(days: 5)), 2);
+
+  final ventas = Ventas();
+  ventas.agregarProducto(manzanas);
+  ventas.agregarProducto(leche);
+  ventas.agregarProducto(pan);
+
+  print('Total a pagar: \$${ventas.calcularTotal()}');
+}
